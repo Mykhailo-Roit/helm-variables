@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example
+  namespace:   {{ .Values.namespace }}
+  labels:
+    app: example
+spec:
+  selector:
+    matchLabels:
+      app: example
+  replicas:   {{ .Values.replicaCount }} #different number of replicas for different deployments
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+        - name: example
+          image: {{ .Values.image }}
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: '0.5'
+            requests:
+              memory: 256Mi
+              cpu: '0.1'
+          ports:
+            - containerPort: 80
+          # envFrom:
+          #   - configMapRef:
+          #       name: example-env-conf
+          #   - secretRef:
+          #       name: example-env-secrets
+          command:   {{ .Values.command  }}
